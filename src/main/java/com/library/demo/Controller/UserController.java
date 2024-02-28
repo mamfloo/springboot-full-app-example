@@ -1,0 +1,29 @@
+package com.library.demo.Controller;
+
+import com.library.demo.Dto.UserDto;
+import com.library.demo.Dto.UserOutputDto;
+import com.library.demo.Entity.User;
+import com.library.demo.Service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/user")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+
+    @PutMapping("/addBook/{id}")
+    public ResponseEntity<UserOutputDto> addBook(@PathVariable Long id){
+        return ResponseEntity.ok(userService.addBook(id));
+    }
+
+    @PutMapping("/removeBook/{id}")
+    public ResponseEntity<UserOutputDto> removeBook(@PathVariable Long id){
+        return ResponseEntity.ok(userService.removeBook(id));
+    }
+}
