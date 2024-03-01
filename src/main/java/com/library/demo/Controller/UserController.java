@@ -18,12 +18,14 @@ public class UserController {
 
 
     @PutMapping("/addBook/{id}")
-    public ResponseEntity<UserOutputDto> addBook(@PathVariable Long id){
-        return ResponseEntity.ok(userService.addBook(id));
+    public ResponseEntity<Void> addBook(@PathVariable Long id){
+        userService.addBook(id);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/removeBook/{id}")
-    public ResponseEntity<UserOutputDto> removeBook(@PathVariable Long id){
-        return ResponseEntity.ok(userService.removeBook(id));
+    public ResponseEntity<Void> removeBook(@PathVariable Long id){
+        userService.removeBook(id);
+        return ResponseEntity.ok().build();
     }
 }

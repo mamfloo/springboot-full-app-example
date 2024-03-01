@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto addBook(Long id) {
+    public void addBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Book not found"));
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principal instanceof UserDetails){
@@ -56,18 +56,15 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
             user.getBooks().add(book);
             book.setUser(user);
-
-            user = userRepository.save(user);
-            List<BookDto> booksDtos = bookMapper.bookListToBookDtoList(user.getBooks());
-            UserOutputDto userOutputDto = modelMapper.map(user, UserOutputDto.class);
-            userOutputDto.setBooks(booksDtos);
-            return userOutputDto;
+            userRepository.save(user);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
     }
 
     @Override
-    public UserOutputDto removeBook(Long id) {
+    public void removeBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Book not found"));
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principal instanceof UserDetails){
@@ -76,14 +73,10 @@ public class UserServiceImpl implements UserService {
             if(!removed){
                 throw new IllegalArgumentException("Book not found");
             }
-
             book.setUser(null);
-            user = userRepository.save(user);
-            List<BookDto> booksDtos = bookMapper.bookListToBookDtoList(user.getBooks());
-            UserOutputDto userOutputDto = modelMapper.map(user, UserOutputDto.class);
-            userOutputDto.setBooks(booksDtos);
-            return userOutputDto;
+            userRepository.save(user);
+        }else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 }

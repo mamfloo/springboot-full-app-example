@@ -9,7 +9,7 @@ public interface UserService {
 
     UserDetailsService userDetailsService();
 
-    UserOutputDto addBook(Long id);
+    void addBook(Long id);
 
-    UserOutputDto removeBook(Long id);
+    void removeBook(Long id);
 }

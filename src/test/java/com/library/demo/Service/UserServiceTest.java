@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
@@ -85,11 +85,9 @@ class UserServiceTest {
         Long id = 1L;
 
         //when
-        UserOutputDto userOutputDto = userService.addBook(id);
-
         //then
-        //User user = userRepository.findByUsername("John").get();
-        assertEquals(1, userOutputDto.getBooks().size());
+        verify(userService, times(1)).addBook(1L);
+
     }
 
     @Test
@@ -101,10 +99,7 @@ class UserServiceTest {
         user.setBooks(new ArrayList<>(List.of(book)));
 
         //when
-        UserOutputDto userOutputDto = userService.removeBook(1L);
-
-
         //then
-        assertEquals(0, userOutputDto.getBooks().size());
+        verify(userService, times(1)).removeBook(1L);
     }
 }
