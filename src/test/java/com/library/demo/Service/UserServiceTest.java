@@ -85,9 +85,13 @@ class UserServiceTest {
         Long id = 1L;
 
         //when
-        //then
-        verify(userService, times(1)).addBook(1L);
+        userService.addBook(1L);
 
+        //then
+        //2 times because 1 is done for loadByUsername for authentication purpose
+        verify(userRepository, times(2)).findByUsername(any());
+        verify(userRepository, times(1)).save(any());
+        verify(bookRepository, times(1)).findById(any());
     }
 
     @Test
@@ -99,7 +103,12 @@ class UserServiceTest {
         user.setBooks(new ArrayList<>(List.of(book)));
 
         //when
+        userService.removeBook(1L);
+
         //then
-        verify(userService, times(1)).removeBook(1L);
+        //2 times because 1 is done for loadByUsername for authentication purpose
+        verify(userRepository, times(2)).findByUsername(any());
+        verify(userRepository, times(1)).save(any());
+        verify(bookRepository, times(1)).findById(any());
     }
 }
