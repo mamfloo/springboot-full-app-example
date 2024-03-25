@@ -9,12 +9,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/book")
 @RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
+
+    @GetMapping
+    public ResponseEntity<List<BookDto>> getBooks(){
+        return ResponseEntity.ok(bookService.getBooks());
+    }
 
     @PostMapping
     public ResponseEntity<BookDto> create(@Valid @RequestBody BookDto bookDto){

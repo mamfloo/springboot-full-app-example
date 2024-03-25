@@ -10,6 +10,7 @@ import com.library.demo.Repository.UserRepository;
 import com.library.demo.Service.AuthenticationService;
 import com.library.demo.Service.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
@@ -45,10 +47,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Username or Password"));
         String token = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
-
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
         jwtAuthenticationResponse.setToken(token);
         jwtAuthenticationResponse.setRefreshToken(refreshToken);
+        log.info("Utente " + user.getUsername() + " si é loggato");
         return jwtAuthenticationResponse;
     }
 
