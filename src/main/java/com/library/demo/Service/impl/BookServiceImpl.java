@@ -9,12 +9,15 @@ import com.library.demo.Repository.BookRepository;
 import com.library.demo.Repository.PublishingHouseRepository;
 import com.library.demo.Service.BookService;
 import com.library.demo.Service.PublishingHouseService;
+import com.library.demo.mapper.BookMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
+@Service()
 @RequiredArgsConstructor
 @Slf4j
 public class BookServiceImpl implements BookService {
@@ -22,6 +25,12 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final PublishingHouseRepository publishingHouseRepository;
     private final ModelMapper modelMapper;
+    private final BookMapper bookMapper;
+
+    @Override
+    public List<BookDto> getBooks() {
+        return bookMapper.bookListToBookDtoList(bookRepository.findAll());
+    }
 
     @Override
     public BookDto createBook(BookDto bookDto) {
@@ -32,6 +41,7 @@ public class BookServiceImpl implements BookService {
         book = bookRepository.save(book);
         bookDto = modelMapper.map(book, BookDto.class);
         bookDto.setPublishingHouseDto(new PublishingHouseDto(publishingHouse.getName()));
+        log.warn("Book " + bookDto.getName() + " created");
         return bookDto;
     }
 

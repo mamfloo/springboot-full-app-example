@@ -38,7 +38,7 @@ class BookServiceTest {
     @BeforeEach
     void setUp(){
         ModelMapper modelMapper = new ModelMapper();
-        bookService = new BookServiceImpl(bookRepository, publishingHouseRepository, modelMapper);
+        bookService = new BookServiceImpl(bookRepository, publishingHouseRepository, modelMapper, null);
     }
 
     @Test
