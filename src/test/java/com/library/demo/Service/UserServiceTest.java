@@ -33,6 +33,8 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Mock
+    private ReservationService reservationService;
+    @Mock
     private UserRepository userRepository;
     private UserService userService;
     @Mock
@@ -49,7 +51,7 @@ class UserServiceTest {
     void setUp(){
         modelMapper = new ModelMapper();
         bookMapper = new BookMapper(modelMapper);
-        userService = new UserServiceImpl(userRepository, bookRepository, modelMapper, bookMapper);
+        userService = new UserServiceImpl(userRepository, bookRepository, reservationService);
 
         //mock the book repository
         book = new Book();

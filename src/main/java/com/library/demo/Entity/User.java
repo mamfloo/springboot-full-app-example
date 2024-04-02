@@ -39,6 +39,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private List<Role> roles;
 
+    @OneToMany
+    private List<Reservation> reservations;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.name())).collect(Collectors.toList());

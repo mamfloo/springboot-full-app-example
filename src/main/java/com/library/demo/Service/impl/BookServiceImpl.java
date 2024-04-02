@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service()
 @RequiredArgsConstructor
@@ -60,5 +61,10 @@ public class BookServiceImpl implements BookService {
         BookDto bookDto = modelMapper.map(book, BookDto.class);
         bookDto.setPublishingHouseDto(new PublishingHouseDto(publishingHouse.getName()));
         return bookDto;
+    }
+
+    @Override
+    public Book findById(Long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new NoSuchElementException("No book was found"));
     }
 }
