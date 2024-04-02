@@ -8,9 +8,7 @@ import com.library.demo.Entity.Book;
 import com.library.demo.Entity.User;
 import com.library.demo.Repository.BookRepository;
 import com.library.demo.Repository.UserRepository;
-import com.library.demo.Service.BookService;
-import com.library.demo.Service.JwtService;
-import com.library.demo.Service.UserService;
+import com.library.demo.Service.*;
 import com.library.demo.mapper.BookMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -24,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,8 +31,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
-    private final ModelMapper modelMapper;
-    private final BookMapper bookMapper;
+    private final ReservationService reservationService;
 
 
     @Override
@@ -50,6 +48,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Book not found"));
+        if(book.getUser() != null){
+            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "Book is not available");
+        }
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principal instanceof UserDetails){
             User user = userRepository.findByUsername(((UserDetails) principal).getUsername())
@@ -69,12 +70,16 @@ public class UserServiceImpl implements UserService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principal instanceof UserDetails){
             User user = userRepository.findByUsername(((UserDetails) principal).getUsername()).orElseThrow(() -> new IllegalArgumentException("User not found"));
-            boolean removed = user.getBooks().removeIf(b -> b.getId().equals(book.getId()));
+            if(!book.getUser().getUsername().equals(user.getUsername())){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
+            boolean removed = user.getBooks().removeIf(b -> Objects.equals(b.getId(), book.getId()));
             if(!removed){
                 throw new IllegalArgumentException("Book not found");
             }
             book.setUser(null);
             userRepository.save(user);
+            reservationService.notifyReservationUser(book);
         }else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

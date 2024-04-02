@@ -5,32 +5,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Book {
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private Double price;
-
-    @ManyToOne
-    private PublishingHouse publishingHouse;
-
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "book")
-    private List<Reservation> reservations;
+    @ManyToOne
+    private Book book;
 
+    @Column
+    private LocalDateTime reservationTime;
 
 }
