@@ -32,5 +32,7 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "book")
+    private List<BorrowHistory> borrowHistories;
 
 }

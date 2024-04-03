@@ -16,8 +16,8 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/{bookId}")
-    public ResponseEntity<Void> addReservation(@PathVariable Long bookIid){
-        reservationService.addReservation(bookIid);
+    public ResponseEntity<Void> addReservation(@PathVariable Long bookId){
+        reservationService.addReservation(bookId);
         return ResponseEntity.ok().build();
     }
 

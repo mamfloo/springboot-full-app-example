@@ -42,6 +42,9 @@ public class User implements UserDetails {
     @OneToMany
     private List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "user")
+    private List<BorrowHistory> borrowHistories;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.name())).collect(Collectors.toList());
