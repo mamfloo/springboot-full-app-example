@@ -17,13 +17,13 @@ public class UserController {
     private final UserService userService;
 
 
-    @PutMapping("/addBook/{id}")
+    @PutMapping("/borrowBook/{id}")
     public ResponseEntity<Void> addBook(@PathVariable Long id){
         userService.addBook(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/removeBook/{id}")
+    @PutMapping("/returnBook/{id}")
     public ResponseEntity<Void> removeBook(@PathVariable Long id){
         userService.removeBook(id);
         return ResponseEntity.ok().build();
