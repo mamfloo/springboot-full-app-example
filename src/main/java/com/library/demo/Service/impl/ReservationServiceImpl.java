@@ -78,6 +78,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void notifyReservationUser(Book book) {
         String[] emails = book.getReservations().stream().map(r -> r.getUser().getEmail()).toList().toArray(new String[0]);
+        if(emails.length == 0){
+            return;
+        }
         mailSevice.sendEmail("Book available", "Hello your reserved book is now available", emails);
     }
 
