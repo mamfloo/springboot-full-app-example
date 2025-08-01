@@ -9,7 +9,7 @@ import com.library.demo.Entity.User;
 public interface AuthenticationService {
 
 
-    UserDto signUp(UserDto userDto);
+    JwtAuthenticationResponse signUp(UserDto userDto);
 
     JwtAuthenticationResponse signIn(LoginDto loginDto);
 

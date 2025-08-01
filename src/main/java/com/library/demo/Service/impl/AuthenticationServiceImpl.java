@@ -33,11 +33,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public UserDto signUp(UserDto userDto){
+    public JwtAuthenticationResponse signUp(UserDto userDto){
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRoles(List.of(Role.USER));
-        return modelMapper.map(userRepository.save(user), UserDto.class);
+        userRepository.save(user);
+        return signIn(new LoginDto(userDto.getUsername(), userDto.getPassword()));
     }
 
     @Override

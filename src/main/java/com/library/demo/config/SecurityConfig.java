@@ -2,6 +2,11 @@ package com.library.demo.config;
 
 import com.library.demo.Entity.Role;
 import com.library.demo.Service.UserService;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll() // neede for dswagger to work without login
+                        .requestMatchers("/swagger-ui/**").permitAll() // neede for dswagger to work without login
+                        .requestMatchers("/v3/api-docs/**").permitAll() // neede for dswagger to work without login
                         .requestMatchers("/admin/**").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/user/**").hasAnyAuthority(Role.USER.name())
                         .anyRequest().authenticated())
@@ -60,5 +68,26 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
         return config.getAuthenticationManager();
+    }
+
+    // added this configuration so i can add the bearer token
+    @Bean
+    public OpenAPI customOpenAPI() {
+        final String securitySchemeName = "Authorization";
+
+        return new OpenAPI()
+                .info(new Info()
+                        .title("My API")
+                        .version("v1"))
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes(securitySchemeName,
+                                new SecurityScheme()
+                                        .name(securitySchemeName)
+                                        .type(SecurityScheme.Type.APIKEY)
+                                        .in(SecurityScheme.In.HEADER)
+                                        .name("Authorization")
+                        )
+                );
     }
 }

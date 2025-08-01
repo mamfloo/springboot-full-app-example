@@ -2,6 +2,7 @@ package com.library.demo.Service.impl;
 
 import com.library.demo.Dto.BookDto;
 import com.library.demo.Dto.BookEditDto;
+import com.library.demo.Dto.FiltroLibroDto;
 import com.library.demo.Dto.PublishingHouseDto;
 import com.library.demo.Entity.Book;
 import com.library.demo.Entity.PublishingHouse;
@@ -10,9 +11,11 @@ import com.library.demo.Repository.PublishingHouseRepository;
 import com.library.demo.Service.BookService;
 import com.library.demo.Service.PublishingHouseService;
 import com.library.demo.mapper.BookMapper;
+import com.library.demo.utils.LibroSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +34,12 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getBooks() {
         return bookMapper.bookListToBookDtoList(bookRepository.findAll());
+    }
+
+    @Override
+    public List<BookDto> getBooks(FiltroLibroDto filtroLibroDto) {
+        Specification<Book> spec = LibroSpecifications.byFiltro(filtroLibroDto);
+        return bookMapper.bookListToBookDtoList(bookRepository.findAll(spec));
     }
 
     @Override
