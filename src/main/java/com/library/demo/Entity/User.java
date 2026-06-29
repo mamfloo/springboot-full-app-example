@@ -24,6 +24,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Double credit;
+
     @Column(unique = true, length = 50)
     private String username;
 
@@ -44,6 +47,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<BorrowHistory> borrowHistories;
+
+    @OneToMany(mappedBy = "user")
+    private List<Fine> fines;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

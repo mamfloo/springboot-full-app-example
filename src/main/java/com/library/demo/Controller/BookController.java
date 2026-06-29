@@ -28,7 +28,7 @@ public class BookController {
 
     @GetMapping("/advanced")
     public ResponseEntity<List<BookDto>> getBooksAdvanced(@ModelAttribute FiltroLibroDto filtroLibroDto){
-        return ResponseEntity.ok(bookService.getBooks(filtroLibroDto));
+    return ResponseEntity.ok(bookService.getBooks(filtroLibroDto));
     }
 
     @PostMapping

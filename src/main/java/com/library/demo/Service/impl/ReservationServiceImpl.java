@@ -40,7 +40,8 @@ public class ReservationServiceImpl implements ReservationService {
         }
         Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(obj instanceof UserDetails){
-            User user = userRepository.findByUsername(((UserDetails) obj).getUsername()).orElseThrow(() -> new IllegalArgumentException("User not found!"));
+            User user = userRepository.findByUsername(((UserDetails) obj)
+                    .getUsername()).orElseThrow(() -> new IllegalArgumentException("User not found!"));
             List<Reservation> userReservations = reservationRepository.findAllByUserUsername(user.getUsername());
             //check if user has an exiting reservation for this book
             userReservations.forEach(r -> {

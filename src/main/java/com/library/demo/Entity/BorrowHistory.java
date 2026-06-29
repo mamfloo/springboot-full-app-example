@@ -24,4 +24,7 @@ public class BorrowHistory {
 
     @ManyToOne
     private User user;
+
+    @OneToOne(mappedBy = "borrowHistory")
+    private Fine fine;
 }
